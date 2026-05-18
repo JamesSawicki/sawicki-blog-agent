@@ -161,22 +161,22 @@ async function commitToGitHub(content, slug) {
   // Base64 encode the content — GitHub API requires this
   const encoded = Buffer.from(content).toString('base64')
 
-  // Check if the file already exists (needed to get the sha for updates)
-  let sha = undefined
-  const checkRes = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
-      Accept: 'application/vnd.github+json',
-    }
-  })
-
-  if (checkRes.ok) {
-    const existing = await checkRes.json()
-    sha = existing.sha
-    console.log('File exists, updating...')
-  } else {
-    console.log('New file, creating...')
+// Check if the file already exists ON THE TARGET BRANCH
+let sha = undefined
+const checkRes = await fetch(`${url}?ref=${GITHUB_BRANCH}`, {
+  headers: {
+    Authorization: `Bearer ${GITHUB_TOKEN}`,
+    Accept: 'application/vnd.github+json',
   }
+})
+
+if (checkRes.ok) {
+  const existing = await checkRes.json()
+  sha = existing.sha
+  console.log('File exists on branch, updating...')
+} else {
+  console.log('New file, creating...')
+}
 
   // Create or update the file
   const body = {
