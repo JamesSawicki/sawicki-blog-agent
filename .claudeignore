@@ -1,0 +1,9 @@
+# .claudeignore
+
+.env
+.env.local
+.env.production
+
+dist/
+.astro/
+node_modules/
