@@ -109,7 +109,7 @@ Use section headers to break up the content.
 Write for someone who is smart but not a real estate expert.`
 
   const response = await client.messages.create({
-    model: 'claude-sonnet-4-5',
+    model: 'claude-sonnet-5',
     max_tokens: 1500,
     system: systemPrompt,
     messages: [{ role: 'user', content: userPrompt }]
