@@ -108,13 +108,17 @@ Format the post with a clear title on the first line, then the body.
 Use section headers to break up the content.
 Write for someone who is smart but not a real estate expert.`
 
-  const response = await client.messages.create({
-    model: 'claude-sonnet-5',
-    max_tokens: 1500,
-    system: systemPrompt,
-    messages: [{ role: 'user', content: userPrompt }]
-  })
+const response = await client.messages.create({
+  model: 'claude-sonnet-5',
+  max_tokens: 1500,
+  thinking: { type: 'disabled' },
+  system: systemPrompt,
+  messages: [{ role: 'user', content: userPrompt }]
+})
 
+if (response.stop_reason === 'max_tokens') {
+  throw new Error('Blog post generation was truncated — max_tokens too low')
+}
   return response.content[0].text
 }
 
